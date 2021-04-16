@@ -7,7 +7,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import banque.connexion.AccesBD;
+import banque.model.Compte;
 import banque.model.Operation;
+import banque.model.Titulaire;
 import banque.model.TypeCompte;
 
 public class Requetes {
@@ -36,6 +38,32 @@ public class Requetes {
 		prepareStatement.setString(6, operation.getTypeOperation());
 		prepareStatement.execute();
 	}
+	
+	// *********** Méthode pour add un Compte
+
+		public static void addCompte(Compte compte) throws SQLException {
+			PreparedStatement prepareStatement = AccesBD.getConnection()
+					.prepareStatement("INSERT INTO `COMPTE` VALUES( ?, ?, ?, ?)");
+
+			prepareStatement.setInt(1, compte.getNumeroCompte());
+			prepareStatement.setInt(2, compte.getCodeTypeCompte());
+			prepareStatement.setInt(3, compte.getCodeTitulaire());
+			prepareStatement.setFloat(4, compte.getSoldeCompte());
+			prepareStatement.execute();
+		}
+		
+		// *********** Méthode pour add un Titulaire
+
+				public static void addTitulaire(Titulaire titulaire) throws SQLException {
+					PreparedStatement prepareStatement = AccesBD.getConnection()
+							.prepareStatement("INSERT INTO `Titulaire` VALUES( ?, ?, ?, ?)");
+
+					prepareStatement.setString(1, titulaire.getPrenomTitulaire());
+					prepareStatement.setString(2, titulaire.getNomTitulaire());
+					prepareStatement.setString(3, titulaire.getAdresseTitulaire());
+					prepareStatement.setString(4, titulaire.getCodePostalTitulaire());
+					prepareStatement.execute();
+				}
 
 	// ******** methode pour update un Type_Compte
 
@@ -46,12 +74,60 @@ public class Requetes {
 			prepareStatement.setString(1, typeCompte.getIntituleCompte());
 			prepareStatement.setInt(2, typeCompte.getCodeTypeCompte());
 			prepareStatement.executeUpdate();
-			System.out.println("Modification effectuee pour le pilote : " + typeCompte);
+			System.out.println("Modification effectuee pour le typeCompte : " + typeCompte);
 
 		} catch (SQLException e) {
 			System.out.println("Erreur lors de la modification !");
 		}
 	}
+	
+	// ******** methode pour update un Titulaire
+
+		public static void updateTitulaire(Titulaire titulaire) throws SQLException {
+			try {
+				PreparedStatement prepareStatement = AccesBD.getConnection()
+						.prepareStatement("UPDATE TITULAIRE SET prenom_titulaire = ? WHERE code_titulaire = ? ");
+				prepareStatement.setString(1, titulaire.getPrenomTitulaire());
+				prepareStatement.setInt(2, titulaire.getCodeTitulaire());
+				prepareStatement.executeUpdate();
+				System.out.println("Modification effectuee pour le Titulaire : " + titulaire);
+
+			} catch (SQLException e) {
+				System.out.println("Erreur lors de la modification !");
+			}
+		}
+		
+		// ******** methode pour update un Compte
+
+				public static void updateCompte(Compte compte) throws SQLException {
+					try {
+						PreparedStatement prepareStatement = AccesBD.getConnection()
+								.prepareStatement("UPDATE Compte SET solde_compte = ? WHERE numero_compte = ? ");
+						prepareStatement.setFloat(1, compte.getSoldeCompte());
+						prepareStatement.setInt(2, compte.getNumeroCompte());
+						prepareStatement.executeUpdate();
+						System.out.println("Modification effectuee pour le Compte : " + compte);
+
+					} catch (SQLException e) {
+						System.out.println("Erreur lors de la modification !");
+					}
+				}
+				
+				// ******** methode pour update une Operation
+
+				public static void updateOperation(Operation operation) throws SQLException {
+					try {
+						PreparedStatement prepareStatement = AccesBD.getConnection()
+								.prepareStatement("UPDATE Operations SET numero_operation = ? WHERE numero_compte = ? ");
+						prepareStatement.setFloat(1, operation.getNumeroOperation());
+						prepareStatement.setInt(2, operation.getNumeroCompte());
+						prepareStatement.executeUpdate();
+						System.out.println("Modification effectuee pour le Operation : " + operation);
+
+					} catch (SQLException e) {
+						System.out.println("Erreur lors de la modification !");
+					}
+				}
 
 	// ******* methode pour delete un Type_Compte
 
@@ -67,6 +143,51 @@ public class Requetes {
 			System.out.println("Erreur lors de la suppression du typeCompte !");
 		}
 	}
+	
+	// ******* methode pour delete un Operation
+
+		public static void deleteOperation(Operation operation) throws SQLException {
+			Statement statement = null;
+
+			try {
+				statement = AccesBD.getConnection().createStatement();
+				String sql = "DELETE FROM Operations WHERE numero_operation =" + operation.getNumeroOperation();
+				statement.executeUpdate(sql);
+				System.out.println("Suppression de l'operarion numero : " + operation + " effectuee");
+			} catch (SQLException e) {
+				System.out.println("Erreur lors de la suppression de l'operation !");
+			}
+		}
+		
+		// ******* methode pour delete un Compte
+
+				public static void deleteCompte(Compte compte) throws SQLException {
+					Statement statement = null;
+
+					try {
+						statement = AccesBD.getConnection().createStatement();
+						String sql = "DELETE FROM COMPTE WHERE numero_compte =" + compte.getNumeroCompte();
+						statement.executeUpdate(sql);
+						System.out.println("Suppression du compte : " + compte + " effectuee");
+					} catch (SQLException e) {
+						System.out.println("Erreur lors de la suppression du compte !");
+					}
+				}
+				
+				// ******* methode pour delete un Titulaire
+
+				public static void deletetitulaire(Titulaire titulaire) throws SQLException {
+					Statement statement = null;
+
+					try {
+						statement = AccesBD.getConnection().createStatement();
+						String sql = "DELETE FROM TITULAIRES WHERE numero_compte =" + titulaire.getCodeTitulaire();
+						statement.executeUpdate(sql);
+						System.out.println("Suppression du titulaire : " + titulaire + " effectuee");
+					} catch (SQLException e) {
+						System.out.println("Erreur lors de la suppression du titulaire !");
+					}
+				}
 
 	// ******* methode pour select un Type_Compte
 
