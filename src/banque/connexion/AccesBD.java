@@ -30,8 +30,8 @@ import javax.swing.JOptionPane;
 
 public class AccesBD {
 
-	private static String utilisateur = "root";
-	private static String motDePasse = "root";
+	private static String utilisateur = "muhammad";
+	private static String motDePasse = "muhammad";
 	private static String pilote = "com.mysql.cj.jdbc.Driver";
 	private static String url = "jdbc:mysql://localhost:3306/BANQUE?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 
@@ -43,7 +43,7 @@ public class AccesBD {
 
 	static {
 		try {
-			Class.forName(pilote).newInstance();
+			Class.forName(pilote);
 		} catch (Exception e) {
 
 			System.out.println(e);
@@ -58,6 +58,7 @@ public class AccesBD {
 	 * 
 	 * @return Connection
 	 */
+	@SuppressWarnings("exports")
 	public synchronized static Connection getConnection() {
 		try {
 			if (connexion == null)
@@ -74,7 +75,7 @@ public class AccesBD {
 	/**
 	 * m�thode de fermeture d'un objet de type connection
 	 */
-	public static void fermerConnection(Connection connexion) {
+	public static void fermerConnection(@SuppressWarnings("exports") Connection connexion) {
 		if (connexion != null) {
 			try {
 				connexion.close();
@@ -165,6 +166,7 @@ public class AccesBD {
 	 * @param requete String
 	 * @return resultat ResultSet
 	 */
+	@SuppressWarnings("exports")
 	public static ResultSet executerQuery(String requete) throws ClassNotFoundException, SQLException
 
 	{
@@ -265,7 +267,7 @@ public class AccesBD {
 	 * m�thode de fermeture d'un objet de type Statement
 	 */
 
-	public static void fermerStatement(Statement statement) {
+	public static void fermerStatement(@SuppressWarnings("exports") Statement statement) {
 		if (statement != null) {
 			try {
 				statement.close();
@@ -282,7 +284,7 @@ public class AccesBD {
 	 * m�thode de fermeture d'un objet de type Statement
 	 */
 
-	public static void fermerResultSet(ResultSet resultSet) {
+	public static void fermerResultSet(@SuppressWarnings("exports") ResultSet resultSet) {
 		if (resultSet != null) {
 			try {
 				resultSet.close();
